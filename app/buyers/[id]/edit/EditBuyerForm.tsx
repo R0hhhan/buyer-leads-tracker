@@ -12,32 +12,14 @@ import { buyerSchema } from "@/lib/validation";
 type BuyerFormValues = z.infer<typeof buyerSchema>;
 
 
-interface Buyer {
-  id: string;
-  fullName: string;
-  phone: string;
-  email?: string | null;
-  city: string;
-  propertyType: string;
-  bhk?: string | null;
-  budgetMin: number | null;
-  budgetMax: number | null;
-  timeline: string;
-  status: string;
-  notes?: string | null;
-  tags?: string[] | null;
-  purpose?: string;
-  source?: string;
-}
-
-export default function EditBuyerForm({ buyer }: { buyer: Buyer }) {
+export default function EditBuyerForm({ buyer }: any) {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = 
     useForm<BuyerFormValues>({
       resolver: zodResolver(buyerSchema) as any,
-      defaultValues: buyer as BuyerFormValues,
+      defaultValues: buyer,
     });
 
   const propertyType = watch("propertyType");
@@ -69,8 +51,8 @@ export default function EditBuyerForm({ buyer }: { buyer: Buyer }) {
         const err = await res.json();
         throw new Error(err.error || "Failed to update buyer");
       }
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Failed to update buyer");
+    } catch (e: any) {
+      setError(e.message || "Failed to update buyer");
     }
   };
 
