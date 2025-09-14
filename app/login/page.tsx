@@ -4,14 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, User, Lock, Mail, UserCheck } from "lucide-react";
 
-// JWT decode function (unchanged)
-interface JwtPayload {
-  userId: string;
-  username: string;
-  role: string;
-  iat?: number;
-  exp?: number;
-}
 
 export default function AuthPage() {
   const router = useRouter();
@@ -35,7 +27,7 @@ export default function AuthPage() {
     setIsLoading(true);
     setMessage("");
 
-    const body: any = {
+    const body: Record<string, string> = {
       action: isLogin ? "login" : "signup",
       username: form.username,
       password: form.password,

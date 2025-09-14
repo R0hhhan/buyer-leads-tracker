@@ -9,9 +9,12 @@ const JWT_SECRET = process.env.JWT_SECRET!;
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Await params
+    const { id } = await params;
+    
     // Verify JWT token
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
@@ -30,7 +33,7 @@ export async function PUT(
         role: string;
         username: string;
       };
-    } catch (err) {
+    } catch {
       return NextResponse.json(
         { success: false, error: "Invalid token" },
         { status: 401 }
@@ -54,7 +57,7 @@ export async function PUT(
 
     // Fetch existing buyer
     const existingBuyer = await prisma.buyer.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!existingBuyer) {
@@ -73,16 +76,19 @@ export async function PUT(
     }
 
     // Compute diff for history
-    const diff: Record<string, { old: any; new: any }> = {};
+    const diff: Record<string, { old: unknown; new: unknown }> = {};
     Object.keys(parsed.data).forEach((key) => {
-      if ((existingBuyer as any)[key] !== (parsed.data as any)[key]) {
-        diff[key] = { old: (existingBuyer as any)[key], new: (parsed.data as any)[key] };
+      if ((existingBuyer as Record<string, unknown>)[key] !== (parsed.data as Record<string, unknown>)[key]) {
+        diff[key] = { 
+          old: (existingBuyer as Record<string, unknown>)[key], 
+          new: (parsed.data as Record<string, unknown>)[key] 
+        };
       }
     });
 
     // Update buyer
     const updatedBuyer = await prisma.buyer.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         ...parsed.data,
         tags: Array.isArray(parsed.data.tags) ? parsed.data.tags : [],
@@ -93,7 +99,7 @@ export async function PUT(
     if (Object.keys(diff).length > 0) {
       await prisma.buyerHistory.create({
         data: {
-          buyerId: params.id,
+          buyerId: id,
           changedBy: decoded.userId,
           diff: {
             ...diff,

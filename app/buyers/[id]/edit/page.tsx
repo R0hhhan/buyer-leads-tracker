@@ -24,7 +24,7 @@ export default async function BuyerEditPage({ params }: PageProps) {
   }
 
   // ✅ 2. Verify token
-  let decoded: any;
+  let decoded: { userId: string; role: string; username: string };
   try {
     decoded = jwt.verify(token, JWT_SECRET) as {
       userId: string;

@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     const timeline = searchParams.get("timeline") || "";
 
     // Build the where clause (same logic as in the main page)
-    const where: any = {
+    const where: Record<string, unknown> = {
       ...(city && { city }),
       ...(propertyType && { propertyType }),
       ...(status && { status }),
@@ -66,7 +66,20 @@ export async function GET(request: NextRequest) {
   }
 }
 
-function convertToCSV(buyers: any[]): string {
+function convertToCSV(buyers: Array<{
+  id: string;
+  fullName: string | null;
+  phone: string | null;
+  email: string | null;
+  city: string | null;
+  propertyType: string | null;
+  budgetMin: number | null;
+  budgetMax: number | null;
+  timeline: string | null;
+  status: string | null;
+  createdAt: Date | null;
+  updatedAt: Date | null;
+}>): string {
   if (buyers.length === 0) {
     return 'No data to export';
   }

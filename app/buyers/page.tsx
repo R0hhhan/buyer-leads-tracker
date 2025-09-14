@@ -19,7 +19,7 @@ export default async function BuyersPage({
   const status = (params.status as string) || "";
   const timeline = (params.timeline as string) || "";
 
-  const where: any = {
+  const where: Record<string, unknown> = {
     ...(city && { city: { contains: city, mode: "insensitive" } }),
     ...(propertyType && { propertyType: { contains: propertyType, mode: "insensitive" } }),
     ...(status && { status: { contains: status, mode: "insensitive" } }),
@@ -83,7 +83,7 @@ export default async function BuyersPage({
             </tr>
           </thead>
           <tbody>
-            {buyers.map((b: any) => (
+            {buyers.map((b) => (
               <tr key={b.id} className="hover:bg-grey-50 transition-colors">
                 <td className="border-b border-grey-100 p-3 text-grey-900">{b.fullName}</td>
                 <td className="border-b border-grey-100 p-3 text-grey-700">{b.phone}</td>

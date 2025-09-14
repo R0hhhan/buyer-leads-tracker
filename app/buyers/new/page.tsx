@@ -19,7 +19,6 @@ export default function SimplifiedBuyerForm() {
     register,
     handleSubmit,
     watch,
-    reset,
     formState: { errors, isSubmitting },
   } = useForm<BuyerFormValues>({
     resolver: zodResolver(buyerSchema) as any,
@@ -68,8 +67,8 @@ export default function SimplifiedBuyerForm() {
       }
       
     //   reset();
-    } catch (e: any) {
-      setError(e.message || "Failed to save buyer lead");
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Failed to save buyer lead");
     }
   };
 
