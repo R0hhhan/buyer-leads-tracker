@@ -15,7 +15,6 @@ export default function Filters() {
 
   // Memoize updateParams to prevent unnecessary re-renders
   const updateParams = useCallback((updates: Record<string, string>) => {
-    console.log('Updating params:', updates);
     const newParams = new URLSearchParams(params.toString());
     Object.entries(updates).forEach(([key, value]) => {
       if (value && value.trim()) {
@@ -26,7 +25,6 @@ export default function Filters() {
     });
     newParams.set("page", "1"); // reset to page 1 on filter change
     const newUrl = `/buyers?${newParams.toString()}`;
-    console.log('Navigating to:', newUrl);
     router.push(newUrl);
   }, [params, router]);
 

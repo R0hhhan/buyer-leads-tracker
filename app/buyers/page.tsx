@@ -34,8 +34,6 @@ export default async function BuyersPage({
   };
 
   // Debug logging
-  console.log('Filter params:', { city, propertyType, status, timeline, search });
-  console.log('Where clause:', JSON.stringify(where, null, 2));
 
   const [buyers, total] = await Promise.all([
     prisma.buyer.findMany({
